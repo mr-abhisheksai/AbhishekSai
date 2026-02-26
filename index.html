@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhishek Sai — Financial Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@200;300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080C14;
+  --bg2: #0B1020;
+  --surface: #0F1628;
+  --card: #131C30;
+  --border: rgba(255,255,255,0.07);
+  --cyan: #00D4FF;
+  --cyan2: #0099CC;
+  --gold: #FFB800;
+  --gold2: #FF9900;
+  --green: #00FF88;
+  --text: #EEF2FF;
+  --muted: #6B7A99;
+  --muted2: #8B96B3;
+  --f-display: 'Bebas Neue', sans-serif;
+  --f-body: 'Outfit', sans-serif;
+  --f-mono: 'DM Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--f-body); font-weight: 300;
+  overflow-x: hidden; cursor: none;
+}
+
+/* CURSOR */
+#cd { width:8px;height:8px;background:var(--cyan);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform .08s; }
+#cr { width:40px;height:40px;border:1px solid rgba(0,212,255,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:width .25s,height .25s,border-color .25s; }
+body.hov #cr { width:56px;height:56px;border-color:var(--cyan); }
+
+/* CANVAS */
+#bgc { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5; }
+
+/* GRAIN */
+body::after {
+  content:'';position:fixed;inset:0;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='5' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.022;pointer-events:none;
+}
+
+/* NAV */
+nav {
+  position:fixed;inset:0 0 auto;z-index:100;padding:1.4rem 3rem;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .3s,border-color .3s;border-bottom:1px solid transparent;
+}
+nav.sc { background:rgba(8,12,20,.88);backdrop-filter:blur(20px);border-color:var(--border); }
+.nl { font-family:var(--f-display);font-size:1.6rem;letter-spacing:.06em;background:linear-gradient(90deg,var(--cyan),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+.nls { display:flex;gap:2.5rem;list-style:none;align-items:center; }
+.nls a { font-size:.8rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s; }
+.nls a:hover { color:#fff; }
+.nc { padding:.55rem 1.4rem;border:1px solid var(--cyan);color:var(--cyan)!important;transition:background .2s!important; }
+.nc:hover { background:rgba(0,212,255,.12)!important; }
+.hb { display:none;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none; }
+.hb span { display:block;width:22px;height:1.5px;background:var(--text);transition:all .3s; }
+.hb.op span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+.hb.op span:nth-child(2) { opacity:0; }
+.hb.op span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+
+/* HERO */
+#hero { min-height:100vh;display:flex;align-items:center;padding:7rem 3rem 4rem;position:relative;z-index:2; }
+.hi { max-width:1200px;margin:0 auto;width:100%;position:relative; }
+.htag {
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--f-mono);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:2rem;
+  opacity:0;animation:fup .5s .1s forwards;
+}
+.ld { width:7px;height:7px;background:var(--green);border-radius:50%;flex-shrink:0;box-shadow:0 0 8px var(--green);animation:lp 1.8s infinite; }
+.hh { font-family:var(--f-display);font-size:clamp(5rem,13vw,13rem);line-height:.88;letter-spacing:.02em;opacity:0;animation:fup .7s .2s forwards; }
+.hh .l1 { display:block;color:#fff; }
+.hh .l2 { display:block;background:linear-gradient(90deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+.hsr { display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end;margin-top:3rem;opacity:0;animation:fup .7s .4s forwards; }
+.hd { font-size:1rem;line-height:1.85;color:var(--muted2);max-width:480px; }
+.hd strong { color:var(--text);font-weight:500; }
+.hrg { display:flex;flex-direction:column;align-items:flex-end;gap:1.5rem; }
+.hms { display:flex;gap:2rem; }
+.hm { text-align:center; }
+.hmn { font-family:var(--f-display);font-size:3.2rem;line-height:1;background:linear-gradient(180deg,#fff,var(--muted2));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+.hml { font-family:var(--f-mono);font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem; }
+.hbs { display:flex;gap:1rem; }
+
+/* BUTTONS */
+.btn { display:inline-flex;align-items:center;gap:.6rem;padding:.8rem 2rem;font-family:var(--f-body);font-size:.82rem;font-weight:500;letter-spacing:.06em;cursor:pointer;transition:all .22s;text-decoration:none;border:none;position:relative;overflow:hidden; }
+.bcn { background:var(--cyan);color:var(--bg);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px)); }
+.bcn::after { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.3),transparent);opacity:0;transition:opacity .2s; }
+.bcn:hover::after { opacity:1; }
+.bcn:hover { transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,212,255,.3); }
+.bgh { background:transparent;color:var(--text);border:1px solid var(--border); }
+.bgh:hover { border-color:rgba(255,255,255,.3);transform:translateY(-2px); }
+
+/* TICKER */
+.tw { border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:.9rem 0;overflow:hidden;position:relative;z-index:2;background:rgba(0,212,255,.03); }
+.tt { display:flex;gap:3.5rem;width:max-content;animation:sc 28s linear infinite; }
+.ti { display:flex;align-items:center;gap:.7rem;white-space:nowrap;font-family:var(--f-mono);font-size:.72rem; }
+.tk { color:var(--muted);letter-spacing:.1em;text-transform:uppercase; }
+.tv { color:var(--cyan);font-weight:500; }
+.ts { color:var(--border); }
+
+/* SECTIONS */
+section { position:relative;z-index:2; }
+.si { max-width:1200px;margin:0 auto;padding:7rem 3rem; }
+.sa { background:var(--bg2); }
+.sl { font-family:var(--f-mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.8rem;display:flex;align-items:center;gap:.8rem; }
+.sl::before { content:'';width:24px;height:1px;background:var(--cyan); }
+.st { font-family:var(--f-display);font-size:clamp(2.8rem,5vw,5rem);line-height:.95;letter-spacing:.03em;color:#fff;margin-bottom:.5rem; }
+.st .ac { background:linear-gradient(90deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+
+/* ABOUT */
+.al { display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:start;margin-top:4rem; }
+.ab { font-size:.97rem;line-height:2;color:var(--muted2); }
+.ab p+p { margin-top:1.2rem; }
+.ab strong { color:var(--text);font-weight:500; }
+.scs { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
+.sc {
+  background:var(--card);border:1px solid var(--border);padding:1.8rem 1.5rem;
+  position:relative;overflow:hidden;transition:border-color .3s,transform .3s;
+}
+.sc::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--cyan),transparent);opacity:0;transition:opacity .3s; }
+.sc:hover { border-color:rgba(0,212,255,.35);transform:translateY(-3px); }
+.sc:hover::before { opacity:1; }
+.scg { position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(0,212,255,.06),transparent 60%);pointer-events:none; }
+.scn { font-family:var(--f-display);font-size:3rem;line-height:1;color:var(--cyan);margin-bottom:.4rem; }
+.scl { font-size:.72rem;color:var(--muted);letter-spacing:.05em;line-height:1.5; }
+
+/* SKILLS */
+.skl { display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;margin-top:4rem; }
+.sgs { display:flex;flex-direction:column;gap:2rem; }
+.sgt { font-family:var(--f-mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;padding-bottom:.7rem;border-bottom:1px solid var(--border); }
+.ps { display:flex;flex-wrap:wrap;gap:.4rem; }
+.pl { padding:.3rem .8rem;background:var(--surface);border:1px solid var(--border);font-size:.72rem;color:var(--muted2);letter-spacing:.03em;transition:all .2s;cursor:default; }
+.pl:hover { border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,.07); }
+.bg { display:flex;flex-direction:column;gap:1.5rem; }
+.bt { display:flex;justify-content:space-between;margin-bottom:.6rem; }
+.bn { font-size:.82rem;font-weight:400;color:var(--text); }
+.bp { font-family:var(--f-mono);font-size:.68rem;color:var(--cyan); }
+.btr { height:2px;background:var(--surface);position:relative;overflow:hidden; }
+.bf { height:100%;width:0;transition:width 1.3s cubic-bezier(.4,0,.2,1); }
+.fc { background:linear-gradient(90deg,var(--cyan2),var(--cyan)); }
+.fg { background:linear-gradient(90deg,var(--gold2),var(--gold)); }
+
+/* PROJECTS */
+.pg { margin-top:4rem;display:flex;flex-direction:column;gap:1.5px;background:var(--border); }
+.pc {
+  background:var(--bg);display:grid;grid-template-columns:60px 1fr 160px;
+  gap:2rem;align-items:start;padding:2.5rem;
+  transition:background .25s;position:relative;overflow:hidden;cursor:default;
+}
+.pc::after { content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);transform:scaleY(0);transform-origin:bottom;transition:transform .35s; }
+.pc:hover { background:var(--surface); }
+.pc:hover::after { transform:scaleY(1); }
+.pc:hover .par { opacity:1;transform:translate(3px,-3px); }
+.pc:hover .ptt { color:var(--cyan); }
+.pn { font-family:var(--f-display);font-size:3rem;line-height:1;color:rgba(255,255,255,.07);padding-top:.2rem; }
+.pbs { display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem; }
+.bd { padding:.2rem .65rem;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid; }
+.bc { border-color:rgba(0,212,255,.35);color:var(--cyan);background:rgba(0,212,255,.06); }
+.bg2 { border-color:rgba(255,184,0,.35);color:var(--gold);background:rgba(255,184,0,.06); }
+.bm { border-color:var(--border);color:var(--muted); }
+.ptt { font-family:var(--f-display);font-size:2rem;letter-spacing:.04em;color:#fff;line-height:1;margin-bottom:.9rem;transition:color .25s;display:flex;align-items:center;gap:.6rem; }
+.par { font-size:1.1rem;opacity:0;transition:all .25s; }
+.pd { font-size:.86rem;color:var(--muted2);line-height:1.85;max-width:580px; }
+.pst { display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem; }
+.sk { font-family:var(--f-mono);font-size:.62rem;color:var(--muted);letter-spacing:.05em;padding:.2rem .55rem;background:var(--surface); }
+.pk { text-align:right;padding-top:.3rem; }
+.pkn { font-family:var(--f-display);font-size:2.8rem;letter-spacing:.03em;line-height:1;background:linear-gradient(180deg,#fff 30%,var(--muted2));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+.pkl { font-family:var(--f-mono);font-size:.6rem;color:var(--muted);letter-spacing:.08em;margin-top:.25rem; }
+
+/* EDUCATION */
+.ec { display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--border);margin-top:4rem; }
+.ecd { background:var(--bg2);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:background .3s; }
+.ecd:hover { background:var(--surface); }
+.eca { position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--gold)); }
+.ecl { font-family:var(--f-display);font-size:5rem;line-height:1;color:rgba(255,255,255,.04);position:absolute;bottom:1rem;right:1.5rem; }
+.edd { font-family:var(--f-mono);font-size:.62rem;color:var(--muted);letter-spacing:.12em;margin-bottom:1.2rem; }
+.edg { font-family:var(--f-display);font-size:1.5rem;letter-spacing:.04em;color:#fff;line-height:1.1;margin-bottom:.6rem; }
+.esc { font-size:.78rem;color:var(--muted2);line-height:1.6;margin-bottom:1.3rem; }
+.ebs { display:inline-block;padding:.28rem .8rem;border:1px solid rgba(0,212,255,.3);background:rgba(0,212,255,.06);font-family:var(--f-mono);font-size:.68rem;color:var(--cyan);letter-spacing:.07em; }
+
+/* CERTS */
+.cg { display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:4rem; }
+.cc { background:var(--card);border:1px solid var(--border);padding:1.8rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s; }
+.cc:hover { border-color:rgba(0,212,255,.3);transform:translateY(-3px); }
+.cgl { position:absolute;inset:0;background:radial-gradient(circle at bottom right,rgba(0,212,255,.05),transparent 60%); }
+.cib { display:inline-block;padding:.2rem .65rem;margin-bottom:.9rem;background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.25);font-family:var(--f-mono);font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase; }
+.cn { font-size:.95rem;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:.5rem; }
+.cd { font-size:.75rem;color:var(--muted);line-height:1.6; }
+.cy { position:absolute;top:1.4rem;right:1.4rem;font-family:var(--f-mono);font-size:.62rem;color:var(--muted); }
+
+/* AWARDS */
+.ar { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem; }
+.aw { padding:3rem 2.5rem;position:relative;overflow:hidden;border:1px solid rgba(255,184,0,.2);background:rgba(255,184,0,.03);transition:border-color .3s,background .3s; }
+.aw:hover { border-color:rgba(255,184,0,.45);background:rgba(255,184,0,.06); }
+.abn { position:absolute;right:1.5rem;top:.5rem;font-family:var(--f-display);font-size:8rem;line-height:1;color:rgba(255,184,0,.06);pointer-events:none; }
+.abl { font-family:var(--f-mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem; }
+.an { font-family:var(--f-display);font-size:1.8rem;letter-spacing:.03em;color:#fff;line-height:1.1;margin-bottom:.8rem; }
+.ad { font-size:.82rem;color:var(--muted2);line-height:1.8; }
+
+/* CONTACT */
+.cl { display:grid;grid-template-columns:1fr 1fr;gap:6rem;margin-top:4rem; }
+.ch { font-family:var(--f-display);font-size:clamp(3rem,6vw,6rem);line-height:.9;letter-spacing:.03em;color:#fff;margin-bottom:1.5rem; }
+.ch span { color:var(--cyan); }
+.cs { font-size:.95rem;color:var(--muted2);line-height:1.9; }
+.cls { display:flex;flex-direction:column; }
+.clk { display:flex;align-items:center;gap:1.5rem;padding:1.3rem 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:all .2s;position:relative;overflow:hidden; }
+.clk:first-child { border-top:1px solid var(--border); }
+.clk::before { content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(0,212,255,.05);transition:width .3s; }
+.clk:hover::before { width:100%; }
+.clk:hover .cv { color:var(--cyan); }
+.clk:hover .ca { opacity:1;transform:translate(4px,-2px); }
+.ct { font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);min-width:80px;position:relative; }
+.cv { font-size:.88rem;transition:color .2s;flex:1;position:relative; }
+.ca { opacity:0;color:var(--cyan);font-size:.9rem;transition:all .2s;position:relative; }
+
+/* FOOTER */
+footer { border-top:1px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;background:var(--bg); }
+.fl { font-family:var(--f-display);font-size:1.2rem;letter-spacing:.05em;color:var(--muted); }
+.fc2 { font-family:var(--f-mono);font-size:.62rem;color:var(--muted);letter-spacing:.1em; }
+.fs { display:flex;align-items:center;gap:.5rem;font-family:var(--f-mono);font-size:.62rem;color:var(--green);letter-spacing:.1em; }
+.fsd { width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:lp 2s infinite; }
+
+/* REVEAL */
+.rv { opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease; }
+.rv.in { opacity:1;transform:none; }
+.d1 { transition-delay:.1s; } .d2 { transition-delay:.2s; } .d3 { transition-delay:.3s; } .d4 { transition-delay:.4s; }
+
+/* KEYFRAMES */
+@keyframes fup { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+@keyframes sc { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes lp { 0%,100%{opacity:1;box-shadow:0 0 8px currentColor} 50%{opacity:.4;box-shadow:none} }
+
+/* MOBILE */
+@media(max-width:960px){
+  .hb{display:flex}
+  .nls{position:fixed;top:0;right:0;bottom:0;width:280px;background:var(--surface);flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;z-index:90;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);border-left:1px solid var(--border);}
+  .nls.op{transform:none}
+  .nls a{font-size:1rem}
+  nav{padding:1.2rem 1.5rem}
+  #hero{padding:6rem 1.5rem 3rem}
+  .hh{font-size:clamp(4rem,15vw,7rem)}
+  .hsr{grid-template-columns:1fr;gap:2rem}
+  .hrg{align-items:flex-start}
+  .al{grid-template-columns:1fr;gap:3rem}
+  .skl{grid-template-columns:1fr;gap:3rem}
+  .pc{grid-template-columns:1fr}
+  .pn{display:none} .pk{display:none}
+  .ec{grid-template-columns:1fr}
+  .cg{grid-template-columns:1fr 1fr}
+  .ar{grid-template-columns:1fr}
+  .cl{grid-template-columns:1fr;gap:3rem}
+  .si{padding:5rem 1.5rem}
+  footer{padding:1.5rem;flex-direction:column;gap:.8rem;text-align:center}
+}
+@media(max-width:500px){
+  .cg{grid-template-columns:1fr}
+  .hms{flex-wrap:wrap;gap:1.5rem}
+  .scs{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="cd"></div>
+<div id="cr"></div>
+<canvas id="bgc"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nl">AS.</div>
+  <ul class="nls" id="nls">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#certifications">Certificatons</a></li>
+    <li><a href="#contact" class="nc">Let's Connect</a></li>
+  </ul>
+  <button class="hb" id="hb" onclick="toggleNav(this)"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hi">
+    <div class="htag"><div class="ld"></div>Open to Internships &amp; Entry-Level Analyst Roles · Hyderabad, IN</div>
+    <h1 class="hh"><span class="l1">ABHISHEK</span><span class="l2">SAI.</span></h1>
+    <div class="hsr">
+      <p class="hd"><strong>Aspiring Financial Analyst · </strong> Data Analytics <strong>·</strong> B.Com Student.<br><br>I turn 10M+ record datasets into boardroom-ready decisions. Credit risk, macroeconomics, corporate finance — done it all before graduating.</p>
+      <div class="hrg">
+        <div class="hms">
+          <div class="hm"><div class="hmn"><span class="counter" data-t="4" data-s="+">0</span></div><div class="hml">Live Projects</div></div>
+          <div class="hm"><div class="hmn"><span class="counter" data-t="10" data-s="M+">0</span></div><div class="hml">Records Analysed</div></div>
+          <div class="hm"><div class="hmn"><span class="counter" data-t="8.28" data-dec>0</span></div><div class="hml">SGPA / 10</div></div>
+        </div>
+        <div class="hbs">
+          <a href="#projects" class="btn bcn">View Work ↗</a>
+          <a href="#contact" class="btn bgh">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="tw">
+  <div class="tt">
+    <div class="ti"><span class="tk">SGPA</span><span class="tv">8.28 / 10</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Records</span><span class="tv">10M+ Analysed</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Entity Analysed</span><span class="tv">₹400 Cr</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Award</span><span class="tv">1st / 35 Teams</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Certifications</span><span class="tv">6 Completed</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Projects</span><span class="tv">4 Live</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">SGPA</span><span class="tv">8.28 / 10</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Records</span><span class="tv">10M+ Analysed</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Entity Analysed</span><span class="tv">₹400 Cr</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Award</span><span class="tv">1st / 35 Teams</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Certifications</span><span class="tv">6 Completed</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+    <div class="ti"><span class="tk">Projects</span><span class="tv">4 Live</span></div>
+    <div class="ti"><span class="ts">///</span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="sa">
+  <div class="si">
+    <div class="sl rv">01 — About</div>
+    <div class="st rv">TURNING <span class="ac">DATA</span><br>INTO DECISIONS</div>
+    <div class="al">
+      <div class="ab rv">
+        <p>I'm a <strong>B.Com (Taxation)</strong> pursuing student at Tapasya College of Commerce (Osmania University) with a strong foundation in accounting, corporate tax, financial reporting and corporate law. My academic work is backed by four end-to-end analytics projects I've built from scratch.</p>
+        <p>My approach is data-first. Whether it's building a <strong>credit risk framework across 1M+ loan records</strong>, analysing a ₹400 Crore entity's five-year financials, or decoding sovereign debt dynamics through Turkey's currency crisis — I find the answer in the data.</p>
+        <p>Seeking an opportunity in <strong>financial analysis, business intelligence or data analytics</strong> where I can contribute immediately and grow with a professional finance team.</p>
+      </div>
+      <div class="scs">
+        <div class="sc rv d1"><div class="scg"></div><div class="scn"><span class="counter" data-t="10" data-s="M+">0</span></div><div class="scl">Data Records Analysed Across Projects</div></div>
+        <div class="sc rv d2"><div class="scg"></div><div class="scn"><span class="counter" data-t="4">0</span></div><div class="scl">Live Projects Delivered</div></div>
+        <div class="sc rv d3"><div class="scg"></div><div class="scn"><span class="counter" data-t="20" data-s="%">0</span></div><div class="scl">Loan Default Reduction Achieved</div></div>
+        <div class="sc rv d4"><div class="scg"></div><div class="scn"><span class="counter" data-t="6">0</span></div><div class="scl">Professional Certifications Earned</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="si">
+    <div class="sl rv">02 — Skills</div>
+    <div class="st rv">TOOLS &amp;<br><span class="ac">EXPERTISE</span></div>
+    <div class="skl">
+      <div class="sgs rv">
+        <div><div class="sgt">Data &amp; Visualisation</div><div class="ps"><span class="pl">MS Excel (Advanced)</span><span class="pl">Power BI</span><span class="pl">PowerPivot</span><span class="pl">Power Query</span><span class="pl">Tableau</span><span class="pl">Dashboards</span><span class="pl">MS PowerPoint</span><span class="pl">MS Word</span></div></div>
+        <div><div class="sgt">Finance &amp; Accounting</div><div class="ps"><span class="pl">Tally Prime</span><span class="pl">GST Compliance</span><span class="pl">Ratio Analysis</span><span class="pl">Taxation</span><span class="pl">Corporate Law</span><span class="pl">Cost Analysis</span><span class="pl">Working Capital</span></div></div>
+        <div><div class="sgt">Programming &amp; ERP</div><div class="ps"><span class="pl">SQL / MySQL</span><span class="pl">SAP S/4HANA</span><span class="pl">Zoho Books</span><span class="pl">HTML</span><span class="pl">Java</span></div></div>
+        <div><div class="sgt">Analytical Methods</div><div class="ps"><span class="pl">Credit Risk Analysis</span><span class="pl">EDA</span><span class="pl">5 Whys RCA</span><span class="pl">Benchmarking</span><span class="pl">Macro Analysis</span></div></div>
+      </div>
+      <div class="bg rv d1">
+        <div class="bi"><div class="bt"><span class="bn">MS Excel — Advanced</span><span class="bp">92%</span></div><div class="btr"><div class="bf fc" data-w="92"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">Financial Analysis</span><span class="bp">88%</span></div><div class="btr"><div class="bf fc" data-w="88"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">Power BI / Tableau</span><span class="bp">83%</span></div><div class="btr"><div class="bf fc" data-w="83"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">Tally Prime &amp; GST</span><span class="bp">85%</span></div><div class="btr"><div class="bf fc" data-w="85"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">SQL / MySQL</span><span class="bp">75%</span></div><div class="btr"><div class="bf fc" data-w="75"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">Credit Risk Analysis</span><span class="bp">78%</span></div><div class="btr"><div class="bf fc" data-w="78"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">Data Storytelling</span><span class="bp">86%</span></div><div class="btr"><div class="bf fg" data-w="86"></div></div></div>
+        <div class="bi"><div class="bt"><span class="bn">SAP S/4HANA</span><span class="bp">55%</span></div><div class="btr"><div class="bf fg" data-w="55"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="sa">
+  <div class="si">
+    <div class="sl rv">03 — Projects</div>
+    <div class="st rv">WORK THAT<br><span class="ac">MATTERS</span></div>
+    <div class="pg rv">
+      <div class="pc">
+        <div class="pn">01</div>
+        <div>
+          <div class="pbs"><span class="bd bc">Data Analytics</span><span class="bd bg2">Featured</span><span class="bd bm">2025</span></div>
+          <div class="ptt">BANK LOAN DEFAULT ANALYSIS <span class="par">↗</span></div>
+          <p class="pd">EDA on <strong style="color:var(--text)">1M+ customer records</strong> to identify default indicators. Built a credit risk framework isolating high-risk borrowers and repayment patterns — contributing to a <strong style="color:var(--cyan)">20% reduction in loan defaults</strong> through policy optimisation. Delivered executive-ready Power BI dashboards.</p>
+          <div class="pst"><span class="sk">Excel</span><span class="sk">MySQL</span><span class="sk">Power BI</span><span class="sk">Exploratory Data Analysis </span><span class="sk">Credit Risk</span></div>
+        </div>
+        <div class="pk"><div class="pkn">20%</div><div class="pkl">Default Reduction </div></div>
+      </div>
+      <div class="pc">
+        <div class="pn">02</div>
+        <div>
+          <div class="pbs"><span class="bd bc">Data Analytics</span><span class="bd bm">2025</span></div>
+          <div class="ptt">IMDb MOVIE TREND ANALYSIS <span class="par">↗</span></div>
+          <p class="pd">Analysed <strong style="color:var(--text)">10M+ IMDb records</strong> using 5 Whys RCA, SQL and Advanced Excel. Uncovered profitability trends, genre ROI and actor performance. Built interactive dashboards covering the Top 250 films and critic vs. audience divergence patterns.</p>
+          <div class="pst"><span class="sk">Advanced Excel</span><span class="sk">SQL</span><span class="sk">Root Cause Analysis</span><span class="sk">Data Cleaning</span><span class="sk">Dashboard</span></div>
+        </div>
+        <div class="pk"><div class="pkn">10M+</div><div class="pkl">IMDb Records Analysed</div></div>
+      </div>
+      <div class="pc">
+        <div class="pn">03</div>
+        <div>
+          <div class="pbs"><span class="bd bc">Corporate Finance</span><span class="bd bm">2024</span></div>
+          <div class="ptt">RAICHUR SOLVENTS LTD FINANCIAL ANALYSIS <span class="par">↗</span></div>
+          <p class="pd">Deep financial analysis of a <strong style="color:var(--text)">₹400 Crore entity</strong> over 5 years — liquidity ratios, profitability metrics, working capital management and competitive benchmarking. Produced strategic growth recommendations for leadership.</p>
+          <div class="pst"><span class="sk">Ratio Analysis</span><span class="sk">Financial Modelling</span><span class="sk">Working Capital</span><span class="sk">Benchmarking</span></div>
+        </div>
+        <div class="pk"><div class="pkn">₹400Cr</div><div class="pkl">Entity Analysed</div></div>
+      </div>
+      <div class="pc">
+        <div class="pn">04</div>
+        <div>
+          <div class="pbs"><span class="bd bg2">🏆 Award Winner</span><span class="bd bc">Macroeconomics</span><span class="bd bm">2024</span></div>
+          <div class="ptt">ECONOMIC CRISIS OF TURKEY ANALYSIS <span class="par">↗</span></div>
+          <p class="pd">Central bank independence, TRY/USD dynamics, inflation and sovereign debt pressure. Formulated debt restructuring and export-led recovery policy. Presented as a documentary — <strong style="color:var(--gold)">1st place among 35 teams</strong>.</p>
+          <div class="pst"><span class="sk">Macroeconomics</span><span class="sk">FX Analysis</span><span class="sk">Inflation</span><span class="sk">Debt Restructuring</span><span class="sk">Documentary</span></div>
+        </div>
+        <div class="pk"><div class="pkn">#1</div><div class="pkl">of 35 Teams</div></div>
+      </div>
+       <!--new project
+       <div class="pc">
+        <div class="pn">05</div>
+        <div>
+          <div class="pbs"><span class="bd bg2">🏆 Award Winner</span><span class="bd bc">Macroeconomics</span><span class="bd bm">2024</span></div>
+          <div class="ptt">ECONOMIC CRISIS OF TURKEY ANALYSIS <span class="par">↗</span></div>
+          <p class="pd">Central bank independence, TRY/USD dynamics, inflation and sovereign debt pressure. Formulated debt restructuring and export-led recovery policy. Presented as a documentary — <strong style="color:var(--gold)">1st place among 35 teams</strong>.</p>
+          <div class="pst"><span class="sk">Macroeconomics</span><span class="sk">FX Analysis</span><span class="sk">Inflation</span><span class="sk">Debt Restructuring</span><span class="sk">Documentary</span></div>
+        </div>
+      -->
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="si">
+    <div class="sl rv">04 — Education</div>
+    <div class="st rv">ACADEMIC<br><span class="ac">FOUNDATION</span></div>
+    <div class="ec rv">
+      <div class="ecd"><div class="eca"></div><div class="ecl">GRAD</div><div class="edd">2024 — 2027 · CURRENTLY PURSUING</div><div class="edg">B.COM TAXATION / TAX PROCEDURES</div><div class="esc">Tapasya College of Commerce<br>Osmania University, Hyderabad</div><div class="ebs">8.28 SGPA — 3rd Semester</div></div>
+      <div class="ecd"><div class="eca"></div><div class="ecl">XII</div><div class="edd">2022 — 2024</div><div class="edg">CLASS XII (INTERMEDIATE - COMMERCE)</div><div class="esc">Tapasya Junior College<br>TGSBIE BOARD - Hyderabad</div><div class="ebs">82.5% — 825 / 1000</div></div>
+      <div class="ecd"><div class="eca"></div><div class="ecl">X</div><div class="edd">2012 — 2022</div><div class="edg">CLASS X (COMMERCE STREAM)</div><div class="esc">Chinmaya Vidyalaya<br>ICSE BOARD - Bangalore, Karnataka</div><div class="ebs">77.4% — 387 / 500</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications" class="sa">
+  <div class="si">
+    <div class="sl rv">05 — Certifications &amp; Awards</div>
+    <div class="st rv">CREDENTIALS &amp;<br><span class="ac">RECOGNITION</span></div>
+    <div class="cg rv">
+      <div class="cc"><div class="cgl"></div><div class="cy">2025</div><div class="cib">Udemy</div><div class="cn">Advanced MS Excel</div><div class="cd">Complex formulas, pivot tables, dashboards and data analysis</div></div>
+      <div class="cc"><div class="cgl"></div><div class="cy">2025</div><div class="cib">Trainity</div><div class="cn">Data Analytics Specialization</div><div class="cd">Data-driven decision-making with practical project execution</div></div>
+      <div class="cc"><div class="cgl"></div><div class="cy">2025</div><div class="cib">Udemy</div><div class="cn">Tally Prime with GST</div><div class="cd">Accounting, GST compliance, invoicing and financial reporting</div></div>
+      <div class="cc"><div class="cgl"></div><div class="cy">2026</div><div class="cib">SAP Learning</div><div class="cn">SAP S/4HANA Cloud ERP</div><div class="cd">Core ERP modules, business processes and enterprise reporting</div></div>
+      <div class="cc"><div class="cgl"></div><div class="cy">2026</div><div class="cib">Coursera-EDUCBA</div><div class="cn">Zoho Books — Cloud Accounting</div><div class="cd">GST compliance, invoicing, bank reconciliation and reporting</div></div>
+      <div class="cc"><div class="cgl"></div><div class="cy">2026</div><div class="cib">Deloitte · TheForage</div><div class="cn">Analytics Job Simulation</div><div class="cd">Built Tableau dashboard and analysed data in a professional context</div></div>
+    </div>
+    <div style="margin-top:4rem">
+      <div class="sl rv" style="margin-bottom:2rem;">Awards</div>
+      <div class="ar rv">
+        <div class="aw"><div class="abn">1st</div><div class="abl">🏆 1st Place · 35 Teams · 2024</div><div class="an">ECONOMIC CRISIS OF TURKEY</div><div class="ad">Analysed TRY/USD dynamics, central bank policy failures and sovereign debt pressure. Presented a documentary-style case study and placed first among 35 competing teams.</div></div>
+        <div class="aw"><div class="abn">2nd</div><div class="abl">🥈 2nd Place · 250 Students · 2023</div><div class="an">ESSAY WRITING — ECONOMIC CRISIS</div><div class="ad">Authored a high-quality analytical essay on economic crisis mechanisms, causes and recovery frameworks. Placed second among 250 participants.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="si">
+    <div class="sl rv">06 — Contact</div>
+    <div class="cl">
+      <div class="rv">
+        <div class="ch">LET'S<br><span>CONNECT.</span></div>
+       
+        <p class="cs"> I am passionate about business and finance with active involvement in analysing business and economic case studieswit hands on experience in analysing and tracking market trends and stock market trading with strategic implementation also have practical exposure to website development and graphic design, combining analytical thinking with creative problem-solving while managing a creative photography page on Instagram.</p>
+        <br>
+        <p class="cs">Actively seeking internships and entry-level analyst roles in finance, BI or data analytics. If you're building a team that values rigour and a data-first mindset, reach out — I respond promptly.</p>
+      </div>
+      <div class="cls rv d1">
+        <a href="mailto:abhishek.sai@hotmail.com" class="clk"><span class="ct">Email</span><span class="cv">abhishek.sai@hotmail.com</span><span class="ca">↗</span></a>
+        <a href="tel:+917416316651" class="clk"><span class="ct">Phone</span><span class="cv">+91 741 631 6651</span><span class="ca">↗</span></a>
+        <a href="https://linkedin.com/in/mr-abhisheksai" target="_blank" class="clk"><span class="ct">LinkedIn</span><span class="cv">linkedin.com/in/mr-abhisheksai</span><span class="ca">↗</span></a>
+        <a href="https://github.com/mr-abhisheksai" target="_blank" class="clk"><span class="ct">GitHub</span><span class="cv">github.com/mr-abhisheksai</span><span class="ca">↗</span></a>
+        <a href="https://drive.google.com/file/d/1Z52Z6Dh_8kMqfrpL1qEtgQdbI8YwGdPC/view" target="_blank" class="clk"><span class="ct">Resume</span><span class="cv">View My Resume - Download</span><span class="ca">↗</span></a>
+        <a href="https://instagram.com/lyf.by.abhi" target="_blank" class="clk"><span class="ct">Instagram</span><span class="cv">@lyf.by.abhi</span><span class="ca">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl">ABHISHEK SAI.</div>
+  <div class="fs"><div class="fsd"></div>Available for Finance Role</div>
+  <div class="fc2">© 2026 · Hyderabad, IN</div>
+</footer>
+
+<script>
+/* PARTICLE CANVAS */
+const canvas = document.getElementById('bgc'), ctx = canvas.getContext('2d');
+let W, H, pts = [];
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+function initPts() {
+  pts = [];
+  const n = Math.min(Math.floor((W * H) / 20000), 80);
+  for (let i = 0; i < n; i++) pts.push({ x: Math.random()*W, y: Math.random()*H, vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3, r:Math.random()*1.4+.4 });
+}
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  const md = 120;
+  pts.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,212,255,.5)'; ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<md){ ctx.beginPath(); ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y); ctx.strokeStyle=`rgba(0,212,255,${(1-d/md)*.1})`; ctx.lineWidth=.5; ctx.stroke(); }
+  }
+  requestAnimationFrame(draw);
+}
+resize(); initPts(); draw();
+window.addEventListener('resize',()=>{ resize(); initPts(); });
+
+/* CURSOR */
+const dot=document.getElementById('cd'), ring=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; });
+(function ac(){ dot.style.transform=`translate(${mx-4}px,${my-4}px)`; rx+=(mx-rx-20)*.14; ry+=(my-ry-20)*.14; ring.style.transform=`translate(${rx}px,${ry}px)`; requestAnimationFrame(ac); })();
+document.querySelectorAll('a,button,.pc,.sc,.cc,.aw').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>30),{passive:true});
+function toggleNav(b){ b.classList.toggle('op'); document.getElementById('nls').classList.toggle('op'); }
+document.querySelectorAll('#nls a').forEach(a=>a.addEventListener('click',()=>{ document.getElementById('hb').classList.remove('op'); document.getElementById('nls').classList.remove('op'); }));
+
+/* COUNTER */
+function runCounter(el){
+  if(el.dataset.done)return; el.dataset.done='1';
+  const t=parseFloat(el.dataset.t), s=el.dataset.s||'', dec=el.hasAttribute('data-dec'), dur=1600, t0=performance.now();
+  (function tick(now){ const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,3), v=t*e;
+    el.textContent=dec?v.toFixed(2)+s:Math.floor(v)+s;
+    if(p<1)requestAnimationFrame(tick); else el.textContent=(dec?t.toFixed(2):t)+s;
+  })(t0);
+}
+
+/* OBSERVER */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.classList.add('in');
+    e.target.querySelectorAll('.bf[data-w]').forEach(b=>setTimeout(()=>b.style.width=b.dataset.w+'%',300));
+    e.target.querySelectorAll('.counter[data-t]').forEach(c=>runCounter(c));
+    io.unobserve(e.target);
+  });
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(r=>io.observe(r));
+window.addEventListener('load',()=>document.querySelectorAll('.hsr .counter,.hms .counter').forEach(c=>runCounter(c)));
+</script>
+</body>
+</html>
