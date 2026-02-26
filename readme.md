@@ -4,4 +4,5 @@
 * Proficient in Tally Prime and MS Office with keen interest in finance, business analysis and data-driven decision-making. 
 
 * 📫How to reach me - abhishek.sai@hotmail.com
-* Connect with me - https://www.linkedin.com/in/mr-abhisheksai/
+* Connect with me - linkedin.com/in/mr-abhisheksai
+* Also visit - abhisheksai.netlify.app/
